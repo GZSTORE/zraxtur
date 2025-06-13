@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hosting Minecraft - ZraXTur</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .category-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+
+    .category-buttons button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #1e90ff;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .category-section {
+      display: none;
+    }
+
+    .category-section.active {
+      display: block;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+
+    .card select {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #888;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 12px;
+      background-color: #1e90ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align:center;">Minecraft Hosting — ZraXTur</h1>
+    <p style="text-align:center;">Pilih kategori hosting yang kamu inginkan:</p>
+
+    <!-- Kategori -->
+    <div class="category-buttons">
+      <button onclick="showCategory('basic')">Basic</button>
+      <button onclick="showCategory('medium')">Medium</button>
+      <button onclick="showCategory('premium')">Premium</button>
+    </div>
+
+    <!-- Basic -->
+    <div id="basic" class="category-section"></div>
+
+    <!-- Medium -->
+    <div id="medium" class="category-section"></div>
+
+    <!-- Premium -->
+    <div id="premium" class="category-section"></div>
+
+    <div class="footer">
+      <p>&copy; 2025 ZraXTur || Host</p>
+      <a href="index.html">← Kembali ke Beranda</a>
+    </div>
+  </div>
+
+  <script>
+    const packages = [1, 2, 4, 8, 12, 16];
+    const versions = [
+      "1.16.5", "1.17.1", "1.18.2", "1.19.4", "1.20.1", "1.20.6", "1.21.5"
+    ];
+
+    function createCard(category, ram) {
+      let hargaPerGB = 10000;
+      if (category === "basic") hargaPerGB = 5000;
+      if (category === "medium") hargaPerGB = 15000;
+      if (category === "premium") hargaPerGB = 10000;
+
+      const price = ram * hargaPerGB;
+      const softwareSelectId = `software-${category}-${ram}`;
+      const versionSelectId = `version-${category}-${ram}`;
+      return `
+        <div class="card">
+          <h3>${ram}GB RAM</h3>
+          <p>${category} Performance | ${ram * 10} Player Support</p>
+          <p><strong>Rp ${price.toLocaleString('id-ID')}</strong></p>
+
+          <label for="${softwareSelectId}">Software:</label>
+          <select id="${softwareSelectId}">
+            <option value="">-- Pilih Software --</option>
+            <option value="Paper">Paper</option>
+            <option value="Spigot">Spigot</option>
+            <option value="Forge">Forge</option>
+            <option value="Vanilla">Vanilla</option>
+            <option value="Fabric">Fabric</option>
+          </select>
+
+          <label for="${versionSelectId}">Versi:</label>
+          <select id="${versionSelectId}">
+            <option value="">-- Pilih Versi --</option>
+            ${versions.map(v => `<option value="${v}">${v}</option>`).join('')}
+          </select>
+
+          <a href="#" onclick="orderNow('${category}', ${ram})">Beli Sekarang</a>
+        </div>
+      `;
+    }
+
+    function populateCategory(category) {
+      const section = document.getElementById(category);
+      section.innerHTML = `
+        <h2 style="text-align:center;">Paket ${category}</h2>
+        <div class="grid">
+          ${packages.map(ram => createCard(category, ram)).join('')}
+        </div>
+      `;
+    }
+
+    ['basic', 'medium', 'premium'].forEach(populateCategory);
+
+    function showCategory(cat) {
+      document.querySelectorAll('.category-section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(cat).classList.add('active');
+    }
+
+    function orderNow(category, ram) {
+      const software = document.getElementById(`software-${category}-${ram}`).value;
+      const version = document.getElementById(`version-${category}-${ram}`).value;
+
+      if (!software || !version) {
+        alert("Silakan pilih Software dan Versi Minecraft terlebih dahulu.");
+        return;
+      }
+
+      const message = `Halo, saya ingin pesan paket Minecraft:\n` +
+                      `Kategori: ${category}\n` +
+                      `RAM: ${ram}GB\n` +
+                      `Software: ${software}\n` +
+                      `Versi: ${version}`;
+      const waURL = `https://wa.me/6282275512596?text=${encodeURIComponent(message)}`;
+      window.open(waURL, "_blank");
+    }
+  </script>
+</body>
+</html>

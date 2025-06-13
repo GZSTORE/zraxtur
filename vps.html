@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>VPS Hosting - ZraXTur</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+
+    .card select {
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      width: 100%;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 12px;
+      background-color: #1e90ff;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align:center;">VPS Hosting — ZraXTur</h1>
+    <p style="text-align:center;">Pilih paket VPS sesuai kebutuhanmu:</p>
+
+    <div class="grid" id="vps-list"></div>
+
+    <div class="footer">
+      <p>&copy; 2025 ZraXTur || Host</p>
+      <a href="index.html">← Kembali ke Beranda</a>
+    </div>
+  </div>
+
+  <script>
+    const vpsData = [
+      { ram: 4, core: 2, pkg1: 30000, pkg2: 35000 },
+      { ram: 8, core: 2, pkg1: null, pkg2: null }, // hanya contoh, tidak ada di data asli
+      { ram: 8, core: 4, pkg1: 40000, pkg2: 45000 },
+      { ram: 16, core: 4, pkg1: 50000, pkg2: 60000 },
+      { ram: 16, core: 8, pkg1: 65000, pkg2: 75000 },
+      { ram: 32, core: 8, pkg1: 80000, pkg2: 100000 },
+    ];
+
+    const regions = ["Asia", "Eropa", "Amerika"];
+    const osList = {
+      "Ubuntu": ["20.04", "22.04", "24.04"],
+      "Debian": ["10", "11", "12"],
+      "CentOS": ["7", "8"]
+    };
+    const planOptions = ["Package 1", "Package 2"];
+
+    function createCard(vps, index) {
+      const id = `vps-${index}`;
+
+      return `
+        <div class="card">
+          <h3>${vps.ram}GB RAM</h3>
+          <p>${vps.core} vCPU | ${vps.ram * 20}GB SSD</p>
+          <p><strong>Package 1:</strong> Rp ${vps.pkg1?.toLocaleString('id-ID') || '-'}<br>
+             <strong>Package 2:</strong> Rp ${vps.pkg2?.toLocaleString('id-ID') || '-'}</p>
+
+          <label>Package:</label>
+          <select id="${id}-plan">
+            <option value="">-- Pilih Paket --</option>
+            ${planOptions.map(p => `<option value="${p}">${p}</option>`).join('')}
+          </select>
+
+          <label>Region:</label>
+          <select id="${id}-region">
+            <option value="">-- Pilih Region --</option>
+            ${regions.map(r => `<option value="${r}">${r}</option>`).join('')}
+          </select>
+
+          <label>OS:</label>
+          <select id="${id}-os" onchange="updateVersion('${id}')">
+            <option value="">-- Pilih OS --</option>
+            ${Object.keys(osList).map(os => `<option value="${os}">${os}</option>`).join('')}
+          </select>
+
+          <label>Versi OS:</label>
+          <select id="${id}-version">
+            <option value="">-- Pilih Versi OS --</option>
+          </select>
+
+          <a href="#" onclick="orderVPS(${index})">Beli Sekarang</a>
+        </div>
+      `;
+    }
+
+    function updateVersion(id) {
+      const os = document.getElementById(`${id}-os`).value;
+      const versionSelect = document.getElementById(`${id}-version`);
+      versionSelect.innerHTML = `<option value="">-- Pilih Versi OS --</option>`;
+      if (osList[os]) {
+        osList[os].forEach(ver => {
+          const opt = document.createElement("option");
+          opt.value = ver;
+          opt.textContent = ver;
+          versionSelect.appendChild(opt);
+        });
+      }
+    }
+
+    function orderVPS(index) {
+      const vps = vpsData[index];
+      const id = `vps-${index}`;
+      const plan = document.getElementById(`${id}-plan`).value;
+      const region = document.getElementById(`${id}-region`).value;
+      const os = document.getElementById(`${id}-os`).value;
+      const version = document.getElementById(`${id}-version`).value;
+
+      if (!plan || !region || !os || !version) {
+        alert("Silakan pilih semua opsi terlebih dahulu: Paket, Region, OS dan Versi OS.");
+        return;
+      }
+
+      const price = plan === "Package 1" ? vps.pkg1 : vps.pkg2;
+      if (!price) {
+        alert("Paket yang dipilih tidak tersedia untuk konfigurasi ini.");
+        return;
+      }
+
+      const message = `Halo, saya ingin pesan VPS:\n` +
+                      `RAM: ${vps.ram}GB\n` +
+                      `vCPU: ${vps.core}\n` +
+                      `Paket: ${plan}\n` +
+                      `Region: ${region}\n` +
+                      `OS: ${os} ${version}\n` +
+                      `Harga: Rp ${price.toLocaleString('id-ID')}`;
+      const waURL = `https://wa.me/6282275512596?text=${encodeURIComponent(message)}`;
+      window.open(waURL, "_blank");
+    }
+
+    document.getElementById("vps-list").innerHTML = vpsData.map(createCard).join('');
+  </script>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Domain - ZraXTur</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      padding: 20px;
+      border-radius: 12px;
+      text-align: center;
+      background: #f9f9f9;
+    }
+
+    .card a {
+      display: inline-block;
+      margin-top: 12px;
+      padding: 8px 12px;
+      background-color: #28a745;
+      color: white;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 40px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1 style="text-align:center;">Pendaftaran Domain — ZraXTur</h1>
+    <p style="text-align:center;">Pilih ekstensi domain yang kamu inginkan:</p>
+
+    <div class="grid" id="domain-list"></div>
+
+    <div class="footer">
+      <p>&copy; 2025 ZraXTur || Host</p>
+      <a href="index.html">← Kembali ke Beranda</a>
+    </div>
+  </div>
+
+  <script>
+    const domains = [
+      { ext: ".com", price: 250000 },
+      { ext: ".net", price: 140000 },
+      { ext: ".org", price: 135000 },
+      { ext: ".id", price: 180000 },
+      { ext: ".my.id", price: 25000 },
+      { ext: ".xyz", price: 50000 },
+      { ext: ".co.id", price: 200000 },
+      { ext: ".tech", price: 90000 }
+    ];
+
+    function createCard(domain) {
+      return `
+        <div class="card">
+          <h3>${domain.ext}</h3>
+          <p><strong>Rp ${domain.price.toLocaleString('id-ID')}</strong> / tahun</p>
+          <a href="#" onclick="orderDomain('${domain.ext}', ${domain.price})">Beli Sekarang</a>
+        </div>
+      `;
+    }
+
+    function orderDomain(ext, price) {
+      const message = `Halo, saya ingin membeli domain:\n` +
+                      `Ekstensi: ${ext}\n` +
+                      `Harga: Rp ${price.toLocaleString('id-ID')}`;
+      const waURL = `https://wa.me/6282275512596?text=${encodeURIComponent(message)}`;
+      window.open(waURL, "_blank");
+    }
+
+    document.getElementById("domain-list").innerHTML = domains.map(createCard).join('');
+  </script>
+</body>
+</html>
