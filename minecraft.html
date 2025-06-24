@@ -111,9 +111,9 @@
 
     function createCard(category, ram) {
       let hargaPerGB = 10000;
-      if (category === "basic") hargaPerGB = 5000;
-      if (category === "medium") hargaPerGB = 15000;
-      if (category === "premium") hargaPerGB = 10000;
+      if (category === "basic") hargaPerGB = 4000;
+      if (category === "medium") hargaPerGB = 13000;
+      if (category === "premium") hargaPerGB = 8000;
 
       const price = ram * hargaPerGB;
       const softwareSelectId = `software-${category}-${ram}`;
